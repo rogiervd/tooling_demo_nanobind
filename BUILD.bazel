@@ -1,33 +1,42 @@
-load("@rules_cc//cc:defs.bzl", "cc_library")
+load("@nanobind_bazel//:build_defs.bzl", "nanobind_extension")
+load("@rules_python//python:py_library.bzl", "py_library")
 
 # The main target that should be used by other modules that want to depend on
 # this library.
 # Adoption: if you make sure the name of the target is the same as the name of
-# the package, the library can be used with just "//tooling_demo_cpp" instead of
-# "//tooling_demo_cpp:tooling_demo_cpp".
-cc_library(
-    name = "tooling_demo_cpp",
+# the package, the library can be used with just "//tooling_demo_nanobind"
+# instead of "//tooling_demo_nanobind:tooling_demo_nanobind".
+
+# The compiled extension module itself, "tooling_demo_nanobind_ext", is an
+# implementation detail: its name must match the NB_MODULE name in
+# add_two_extension.cpp, since that determines the Python module the
+# resulting shared object can be imported as. The py_library below re-exports
+# it under the clean public name "tooling_demo_nanobind".
+nanobind_extension(
+    name = "tooling_demo_nanobind_ext",
     # Sources to be compiled into the library.
-    # Adoption note: for a header-only library, leave this empty.
-    srcs = ["source/tooling_demo_cpp/add_two.cpp"],
-    # Headers that a user of this library can include.
-    hdrs = ["include/tooling_demo_cpp/add_two.hpp"],
-    # The prefix to be added to the include path.
-    # If the include directory can be set to "include", then include_prefix
-    # should be set to "".
-    include_prefix = "",
-    # The prefix to be stripped from the include path.
-    strip_include_prefix = "include/",
+    srcs = ["source/tooling_demo_nanobind_ext/add_two_extension.cpp"],
     visibility = ["//visibility:public"],
     # Dependencies of this library.
     deps = [
-        "@boost.rational",
+        "@nanobind_bazel//:nanobind",
+        "@tooling_demo_cpp",
     ],
 )
 
-# All include files, for Doxygen to generate documentation from.
-filegroup(
-    name = "doc_sources",
-    srcs = glob(["include/tooling_demo_cpp/**"]),
-    visibility = ["//documentation:__pkg__"],
+# The public Python package, re-exporting the compiled extension's API. Used
+# by Python tests (see test/tooling_demo_nanobind) and by any other Python
+# consumer of this library.
+py_library(
+    name = "tooling_demo_nanobind",
+    srcs = ["source/tooling_demo_nanobind/__init__.py"],
+    data = [":tooling_demo_nanobind_ext"],
+    # "." makes the compiled extension (built at the repo root) importable;
+    # "source" makes the "tooling_demo_nanobind" package below it importable
+    # as a top-level package.
+    imports = [
+        ".",
+        "source",
+    ],
+    visibility = ["//visibility:public"],
 )

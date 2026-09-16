@@ -1,13 +1,14 @@
-# C++ tooling demo
+# Nanobind tooling demo
 
-This is a demo of how to set up tooling for C++ with Bazel.
-It has a module "tooling_demo_cpp" in the `include/tooling_demo_cpp` directory, and tests in `test`.
+This is a demo of how to set up tooling for Nanobind with Bazel.
+Nanobind makes it possible to implement a Python module in C++.
+It has a module "tooling_demo_nanobind" in the `include/tooling_demo_nanobind` directory, and tests in `test`.
 
 ## Use this library with Bazel
 
 This section explains how this repo could be used if it provided useful functionality.
 
-1. Make your project depend on `@tooling_demo_cpp//:tooling_demo_cpp`, or, since the name of the module and the target are the same, `@tooling_demo_cpp`.
+1. Make your project depend on `@tooling_demo_nanobind//:tooling_demo_nanobind`, or, since the name of the module and the target are the same, `@tooling_demo_nanobind`.
 
 2. Use the Bazel module registry at `github.com/rogiervd/...` by adding to your `.bazelrc`
 
@@ -15,7 +16,7 @@ This section explains how this repo could be used if it provided useful function
 
 3. Add to your `MODULE.bazel`
 
-        bazel_dep(name = "tooling_demo_cpp", version = "x.y.z")
+        bazel_dep(name = "tooling_demo_nanobind", version = "x.y.z")
 
 ### A note about Bazel files
 
@@ -25,6 +26,11 @@ Understanding Bazel is not a prerequisite for working with this code.
 
 ## Testing and developing
 
+On macOS, if you get complaints about inclusion of `SDKSettings.json`, it may be necessary to say
+```
+sudo xcode-select --switch /Library/Developer/CommandLineTools
+```
+because then `rules_cc`'s `unix_cc_configure.bzl` will ignore `SDKSettings.json`.
 
 ### Unit testing
 
@@ -90,7 +96,7 @@ clang-tidy -p . --config-file=.clang-tidy --exclude-header-filter='external/.*' 
 bazel coverage //test/...
 ```
 
-[![Code coverage](https://coveralls.io/repos/github/rogiervd/tooling_demo_cpp/badge.svg?branch=main)](https://coveralls.io/github/rogiervd/tooling_demo_cpp?branch=main)
+[![Code coverage](https://coveralls.io/repos/github/rogiervd/tooling_demo_nanobind/badge.svg?branch=main)](https://coveralls.io/github/rogiervd/tooling_demo_nanobind?branch=main)
 
 
 ## Building documentation

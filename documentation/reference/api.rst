@@ -3,5 +3,10 @@ Classes
 
 This implements addition.
 
-.. doxygenclass:: tooling_demo_cpp::AddTwo
-    :members: operator()
+.. py:class:: tooling_demo_nanobind.AddTwo
+
+    A callable that adds two to an integer.
+
+    .. py:method:: __call__(value)
+
+        Add two to the given integer.

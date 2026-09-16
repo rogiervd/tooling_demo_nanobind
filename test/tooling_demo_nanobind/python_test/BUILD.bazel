@@ -1,0 +1,9 @@
+# Define the tests.
+
+# To run all tests in all packages:
+#   bazel test //test/...
+
+# load("@rules_python//python:py_test.bzl", "py_test")
+load("//test:run_pytest.bzl", "run_pytest")
+
+run_pytest(name = "test_add_two")

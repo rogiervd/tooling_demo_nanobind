@@ -9,7 +9,7 @@
     }
   ],
   "repository": [
-    "github:rogiervd/tooling_demo_cpp"
+    "github:rogiervd/tooling_demo_nanobind"
   ],
   "versions": [],
   "yanked_versions": {}
